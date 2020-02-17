@@ -1,0 +1,25 @@
+
+DJANGO中：
+第一步：需要把生成验证码的二进制数转换为base64,并以utf-8解码，才可以在 JsonResponse 中传输
+图片二进制如下：
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00_\x00\x00\x002.......'
+
+转换为base64如下：
+iVBORw0KGgoAAAANSUhEUgAAAF8AAAAyCAYAAAA6JgdxAAAM+klEQ.........
+
+import base64
+
+class Login(View):
+    def get(self, request):
+        tempCaptcha=Captcha.generate_captcha()
+        tempBase=base64.b64encode(tempCaptcha[1]).decode("utf-8")
+        return JsonResponse({"code":2000,"captcha":tempBase})
+
+
+VUE中：
+
+需要在src前面添加 'data:image/png;base64,'  直接把base64转为二进制图片
+
+例如：
+//response.captcha是后台传过来的base64编码
+<div style="position: absolute;left: 78.5%;top: 1px;"><img :src="'data:image/png;base64,'+response.captcha" alt="" @click="getCaptcha"></div>
