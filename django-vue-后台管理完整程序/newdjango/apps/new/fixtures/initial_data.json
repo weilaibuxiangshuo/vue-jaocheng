@@ -1,0 +1,12 @@
+[
+  {
+    "model":"new.newuser",
+    "id":102,
+    "fields":{
+      "username":"9999993",
+      "password":"pbkdf2_sha256$150000$Z47FdemoBNyo$7n6Vlx6rGnneZoU5kgyM8a4JYcJ2v2UnPszXE8DKcCU=",
+      "is_superuser":1,
+      "email":"331@qq.com"
+    }
+  }
+]
