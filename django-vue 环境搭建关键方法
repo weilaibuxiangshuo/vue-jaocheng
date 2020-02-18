@@ -1,0 +1,50 @@
+
+第一步：
+vue 打包的时候，需要加一个前缀 例如：/api (例如：baseURL: "/api")
+这样所有页面请求都有以/api开头
+
+第二步：
+django中设置，如果搭建在服务器，因为是前后端分离，所以不需要设置
+from django.views.generic.base import TemplateView
+re_path(r'.*', TemplateView.as_view(template_name="index.html")),
+也不需设置，setting中TEMPLATES中'DIRS': [os.path.join(BASE_DIR, 'dist')] 和 STATICFILES_DIRS=[os.path.join(BASE_DIR,'dist/static')]
+
+另外：如果你把vue项目放在django里，就需要设置上面三点
+
+第三步：nginx关键设置(设置两个server,第一个反代到第二个，因为django是以8000端口打开)
+
+http {
+  limit_conn_zone $binary_remote_addr zone = conn_ip: 10m;
+  limit_conn   conn_ip  3;
+  include       mime.types;
+  default_type  application /octet - stream;
+  server_tokens off;
+
+  upstream vueapp {
+    server 127.0.0.1: 8000;
+  }
+  server {
+    listen       80;
+    location / {
+      root /home/dist2/dist;
+      index index.html;
+      try_files $uri $uri / /index.html;    //这个很重要，决定页面不会跳404
+  }
+
+  location /api {
+    proxy_pass  http://vueapp;
+  }
+}
+server {
+  listen 8000;
+  server_name 192.168.159.138;
+  location / {
+    include  /usr/local/nginx/conf/uwsgi_params;
+    uwsgi_pass localhost: 8001;
+}
+location /static {
+  alias /home/dist/dist/static;
+    }
+  }
+}
+
