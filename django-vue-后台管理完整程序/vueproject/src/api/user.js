@@ -11,7 +11,7 @@ export function login(data) {
 
 export function getLoginApi() {
   return request({
-    url: '/login/',
+    url: '/getcaptcha/',
     method: 'get'
   })
 }
