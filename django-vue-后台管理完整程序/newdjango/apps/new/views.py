@@ -17,9 +17,10 @@ class MiddleProcessReq(MiddlewareMixin):
     """中间件过滤所有请求"""
     def process_request(self, request):
         urlRouter = request.META.get('PATH_INFO')
-        whiteListRoutes=["/login/","/login/ceshi/"]
+        whiteListRoutes=["/login/","/getcaptcha/"]
         if not (urlRouter in whiteListRoutes):
             authorizationInfo=request.META.get("HTTP_AUTHORIZATION")
+            print("authorizationInfo",authorizationInfo)
             if authorizationInfo:
                 temp = BackendToken.GetToken(authorizationInfo)
                 if temp is not None and temp==authorizationInfo:
@@ -33,7 +34,6 @@ class MiddleProcessReq(MiddlewareMixin):
                             isBool = 1
                     if isBool != 1:
                         return JsonResponse({"code": 500})
-
                 else:
                     return JsonResponse({"code": 500})
             else:
@@ -41,14 +41,15 @@ class MiddleProcessReq(MiddlewareMixin):
 
 
 
-class Login(View):
+class GetCaptcha(View):
     def get(self, request):
         tempCaptcha=Captcha.generate_captcha()
         request.session["captcha"]=tempCaptcha[0]
         cck=base64.b64encode(tempCaptcha[1]).decode("utf-8")
-        # newUserOne=NewUser.objects.create_superuser(username='admin',password='adminadmin',email='11@qq.com')
         return JsonResponse({"code":2000,"captcha":cck})
 
+
+class Login(View):
     def post(self, request):
         username=request.POST.get("username")
         password=request.POST.get("password")
