@@ -1,0 +1,15 @@
+第一种：
+直接在script中import进入，此方式不会产生网络调用json
+import data from '../assets/ceshi.json'
+
+第二种：
+使用axios,安装好用后
+首先在main.js中设置如下：
+import axios from 'axios'
+Vue.prototype.$http=axios;
+
+其次在页面中调用如下：
+this.$http.get('ceshi.json').then(response=>{
+    console.log("200",response)
+})
+此方式会产生网络调用json
