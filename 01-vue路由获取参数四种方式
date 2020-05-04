@@ -1,0 +1,93 @@
+第一种：props
+配置：
+　　组件内定义：
+props: ['id']
+　　路由映射配置，开启props:true :
+
+       {
+            path: '/user/:id',
+            component: User,
+            props: true
+        }   
+跳转传参：
+　　1、标签跳转
+<router-link to="/user/1">第一个</router-link>
+　　2.函数式跳转：
+getDescribe(id) {
+// 直接调用$router.push 实现携带参数的跳转
+        this.$router.push({
+          path: `/describe/${id}`,
+        })
+ 
+
+获取参数：
+
+<div>第一种传值props： {{ id }}</div>
+ 
+
+第二种：
+配置:（url显示在问号之前）
+　　路由映射配置：
+{
+    path: '/user/:id',
+    component: User
+},
+跳转传参：
+　　1、标签跳转
+<router-link to="/user/1">第二个</router-link>
+　　2.函数式跳转：
+getDescribe(id) {
+// 直接调用$router.push 实现携带参数的跳转
+        this.$router.push({
+          path: `/user/${id}`,
+        })
+获取参数：
+
+<div>第二种传值$route.params.id： {{$route.params.id}}</div>
+ 
+
+第三种：（url不显示参数）
+配置：
+　　路由映射配置：
+{
+    path: '/user',
+    component: User
+},　　
+跳转传参：
+　1、标签跳转
+<router-link :to="{name:'c', params:{id:1}}">第四个</router-link>
+　2.函数式跳转：
+getDescribe(id) {
+// 直接调用$router.push 实现携带参数的跳转
+        this.$router.push({
+          path: `/user`,
+　　　　　　params:{
+　　　　　　　　id:id
+　　　　　　}
+        })
+
+<div>第三种传值$route.params.id： {{$route.params.id}}</div>
+ 
+
+第四种：(url显示在？之后)
+配置：
+　　路由映射配置：
+{
+    path: '/user',
+    component: User
+},　　
+跳转传参：
+　1、标签跳转
+<router-link :to="{name:'c', query:{id:1}}">第四个</router-link>
+　2.函数式跳转：
+getDescribe(id) {
+// 直接调用$router.push 实现携带参数的跳转
+        this.$router.push({
+          path: `/user`,
+　　　　　　query:{
+　　　　　　　　id:id
+　　　　　　}
+        })
+
+
+<div>第四种传值$route.query.id： {{$route.query.id}}</div>
