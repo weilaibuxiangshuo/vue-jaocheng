@@ -1,0 +1,2 @@
+vue-elementui中select下拉列，赋值不显示，
+这个是由于form下面的select只能接收int类型，如果使用字符串，赋值给v-model后，不会自动显示
