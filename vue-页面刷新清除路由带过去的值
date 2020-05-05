@@ -1,0 +1,32 @@
+当路由在跳转时，有带值进行传递，列如下：
+
+        <el-table-column label="用户" prop="username" v-slot="newUsername">
+          <template>
+              <router-link :to="{name:'datamg',query:{id:newUsername.row.id}}"  class='newUserStyle' tag="div" >{{newUsername.row.username}}</router-link>
+          </template>
+        </el-table-column>
+        
+        
+  需要先在当前页面，设置路由离开当前页面时，把路由带的值先赋值给store中SET_ROUTE_ID
+  
+  定义：
+    beforeRouteLeave(to, from, next) {
+    window.onresize = null;
+    this.$store.commit("usermg/SET_ROUTE_ID",to.query.id)
+    next();
+  }
+  
+  在目标页判断store是否有值，如果没有值，直接把当前路由的path直接让它再跳转一下，因为this.$route.path是不带？后面的参数的,
+  如果不清楚，可以直接打印this.$route.fullpath跟this.$route.path,或者直接打印this.$route
+  
+        const routeId=this.$store.getters.routeIdVal
+        if(this.$route.query.id==routeId){
+          this.dataForm.id=parseInt(this.$route.query.id)
+        }else{
+          this.$router.push({path:this.$route.path})
+        }
+      });
+  
+  
+  
+  
