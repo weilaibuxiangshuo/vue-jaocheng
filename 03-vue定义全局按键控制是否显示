@@ -1,0 +1,32 @@
+第一：
+首先在utils中新建一个js文件，也可以别的地方，设置如下：
+
+  
+import Vue from "vue"
+
+//权限指令
+const has = Vue.directive('has',{
+    inserted:function(el,binding,vnode){
+        // console.log('vnode',vnode.context.$route.meta.btnpermission)
+        if (!Vue.prototype.$_has(el,vnode)){
+            el.parentNode.removeChild(el)
+        }
+    }
+})
+
+Vue.prototype.$_has = function(el,vnode){
+    let listData=vnode.context.$route.meta.btnpermission
+    let elData=el.getAttribute('isbtnpermission')
+    if(listData.includes(elData)){return true}else{return false}
+}
+
+export {has}
+
+第二：
+在main.js中引入就可以
+import has from './utils/btnpermission'
+
+第三：
+在需要的组件中绑定调用（v-has）
+<el-button type="primary" @click="addMenu" isbtnpermission="add" v-has>添加菜单</el-button>
+
