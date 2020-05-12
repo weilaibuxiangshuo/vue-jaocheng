@@ -4,14 +4,21 @@ vue 打包的时候，需要加一个前缀 例如：/api (例如：baseURL: "/a
 这样所有页面请求都有以/api开头
 
 第二步：
-django中设置，如果搭建在服务器，因为是前后端分离，所以不需要设置
+设置，setting中TEMPLATES中'DIRS': [os.path.join(BASE_DIR, 'dist')] 和 STATICFILES_DIRS=[os.path.join(BASE_DIR,'dist/static')]
+
+第三步：在项目下的url添加，注意不要在app下面添加，在项目下添加，可以直接随便一个index或其它随意名字就可以访问首页，而不需要在加api
 from django.views.generic.base import TemplateView
-re_path(r'.*', TemplateView.as_view(template_name="index.html")),
-也不需设置，setting中TEMPLATES中'DIRS': [os.path.join(BASE_DIR, 'dist')] 和 STATICFILES_DIRS=[os.path.join(BASE_DIR,'dist/static')]
+urlpatterns = [
+    path('api/',include("new.urls",namespace="new")),
+    re_path(r'.*', TemplateView.as_view(template_name='index.html'))
+]
+第四步：由于在打包vue的时候，添加/api所以，刚上面也看到需要在项目下加个api/这样，后台程序才能访问，而首页，只需要随意一个名称就能访问，
+所以，访问首页的路径一定不能跟后台程序访问django的数据路径一致，否则会出错
 
-另外：如果你把vue项目放在django里，就需要设置上面三点
+另外：如果你把vue项目放在django里，就需要设置上面4点
 
-第三步：nginx关键设置(设置两个server,第一个反代到第二个，因为django是以8000端口打开)
+第五步：nginx关键设置(设置两个server,第一个反代到第二个，因为django是以8000端口打开)
+注意：如果你在nginx中有设置/api就要把项目下面的/api去掉，否则就多加个/api了，
 
 http {
   limit_conn_zone $binary_remote_addr zone = conn_ip: 10m;
