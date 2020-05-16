@@ -35,7 +35,7 @@ http {
     location / {
       root /home/dist2/dist;
       index index.html;
-      try_files $uri $uri / /index.html;    //这个很重要，决定页面不会跳404
+      try_files $uri $uri/ /index.html;    //这个很重要，决定页面不会跳404
   }
 
   location /api {
