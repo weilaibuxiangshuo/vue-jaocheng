@@ -79,11 +79,12 @@ npm install --save-dev compression-webpack-plugin
   mode: 'history', // require service support
   base:'/ceshi/file/',
   并且路由有设置/login登陆开头，所以nginx路径配置如下：
+  注意：nginx设置不能加上vue里面设置的路由，否则刷新会报错，因为刷新时vue会自动添加上它自己的路由，所以，只需设定base中设定的就可以了
   
-  location /ceshi/file/login {
-        alias   /home/mmm/dist/;   #alias跟root的区别是,alias访问时不会url后面，会舍弃/ceshi/file/login，直接以index.html访问，root则相反
+  location /ceshi/file {
+        alias   /home/mmm/dist/;   #alias跟root的区别是,alias访问时不会url后面，会舍弃/ceshi/file，直接以index.html访问，root则相反
         index  index.html index.htm;
-        try_files $uri $uri/ /ceshi/file/login;   #如果/ceshi/file/login匹配不，系统会在加后面加/在匹配，如还匹配不到会使用 /ceshi/file/login进行访问
+        try_files $uri $uri/ /ceshi/file;   #如果/ceshi/file匹配不，系统会在加后面加/在匹配，如还匹配不到会使用 /ceshi/file进行访问
     }
 
     location /home/mmm/dist/static {
