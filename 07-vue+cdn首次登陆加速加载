@@ -1,0 +1,132 @@
+第一步：首先打开index.html引入CDN的链接路径：（可以到https://www.bootcdn.cn/下面找）
+在<head></head>头部最下面，添加vue需要用的所有组件，如下：
+下面中<%= BASE_URL %>是router中设置的base路径
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta base="/shop/tbsearch/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="icon" href="<%= BASE_URL %>static/favicon.ico">
+  <script src="https://cdn.bootcss.com/vue/2.6.10/v22ue.min.js" ></script>
+  <script>
+    if (typeof Vue === "undefined") {
+      document.write(unescape("%3Cscript src='<%= BASE_URL %>static/bak/vue.min.js'%3E%3C/script%3E"))
+    }
+  </script>
+  <script src="https://cdn.bootcss.com/vuex/3.1.0/vuex.min.js"></script>
+  <script>
+    if (typeof Vuex === "undefined") {
+      document.write(unescape("%3Cscript src='<%= BASE_URL %>static/bak/vuex.min.js'%3E%3C/script%3E"))
+    }
+  </script>
+  <script src="https://cdn.bootcss.com/vue-router/3.0.6/vue-router.min.js"></script>
+  <script>
+    if (typeof VueRouter === "undefined") {
+      document.write(unescape("%3Cscript src='<%= BASE_URL %>static/bak/vue-router.min.js'%3E%3C/script%3E"))
+    }
+  </script>
+  <script src="https://cdn.bootcss.com/axios/0.18.1/axios.min.js"></script>
+  <script>
+    if (typeof axios === "undefined") {
+      document.write(unescape("%3Cscript src='<%= BASE_URL %>static/bak/axios.min.js'%3E%3C/script%3E"))
+    }
+  </script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.0/index.js"></script>
+  <script>
+    if (typeof ELEMENT === "undefined") {
+      document.write(unescape("%3Cscript src='<%= BASE_URL %>static/bak/element-ui.js'%3E%3C/script%3E"))
+    }
+  </script>
+</head>
+第二步：在vue.config.js中添加如下：
+        externals: {
+          "vue": "Vue",   #前面key是本地引用的名称，后面value是官方绑定的全局名称，不可变，必须这样才能用
+          "element-ui": "ELEMENT",
+          "zh-CN": "locale",
+          "vuex": "Vuex",
+          "vue-router": "VueRouter",
+          "axios": "axios",
+        },
+在文件的效果如下：
+  configureWebpack: config => {
+    // provide the app's title in webpack's name field, so that
+    // it can be accessed in index.html to inject the correct title.
+    if (process.env.NODE_ENV === "production") {
+      return {
+        plugins: [
+          new CompressionPlugin({
+            test: /\.js$|\.css$/,
+            threshold: 10240,
+            deleteOriginalAssets: true,
+          })
+        ],
+        name: name,
+        resolve: {
+          alias: {
+            '@': resolve('src')
+          }
+        },
+        externals: {
+          "vue": "Vue",
+          "element-ui": "ELEMENT",
+          "zh-CN": "locale",
+          "vuex": "Vuex",
+          "vue-router": "VueRouter",
+          "axios": "axios",
+        },
+      }
+    }
+    return {
+      name: name,
+      resolve: {
+        alias: {
+          '@': resolve('src')
+        }
+      },
+      externals: {
+        "vue": "Vue",
+        "element-ui": "ELEMENT",
+        "zh-CN": "locale",
+        "vuex": "Vuex",
+        "vue-router": "VueRouter",
+        "axios": "axios",
+      },
+    }
+  },
+
+
+第三步：
+把VUE中引入上面组件的import相应的组件去掉或者组掉，例如：
+// import Vue from 'vue'
+// import ElementUI from 'element-ui'
+// import Router from 'vue-router'
+// Vue.use(ElementUI, { locale })
+// import Vuex from 'vuex'
+注意：VUE所有组件都要找一下，凡事引入官方组件的地方，不要禁掉，
+如果是export出来的，就不需要，像router是通过VueRouter创建，别的地方引用就可以正常引用，
+注意创意路由实例一定要用官方的VueRouter，来创建，具体效果如下
+
+const createRouter = () => new VueRouter({
+  mode: 'history', // require service support
+  base:'/shop/tbsearch/',
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRoutes
+})
+
+const router = createRouter()
+
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
+}
+
+export default router
+
+第四步：
+注意：因为有设置打包用gz，所以可以在public中把官方组件都下载下来，新建bak放在里面，压缩的时候系统会把压缩放在跟static同级目录中，
+因为上面是设置备用官方组件是static/bak路径，所以，要把打包后的bak放在static下面，还有favicon.ico,也考到static下面。
+
+第五步：
+就是nginx一定要使用gz模式
+
