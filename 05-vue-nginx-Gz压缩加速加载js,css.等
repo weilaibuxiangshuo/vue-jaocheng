@@ -1,3 +1,5 @@
+*注意vue-cli打包是不会把devServer代理打包进去的，因为devServer只用于开发环境，所以，nginx不用考虑vue代理设置的问题
+
 第一：vue在打包之前先安装插件
 npm install --save-dev compression-webpack-plugin
 
