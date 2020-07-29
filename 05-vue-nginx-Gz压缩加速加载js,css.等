@@ -4,7 +4,12 @@
 第一：vue在打包之前先安装插件
 npm install --save-dev compression-webpack-plugin
 
+
 第二：设置vue.config.js
+
+首先引：
+const CompressionPlugin = require("compression-webpack-plugin")
+
 找到module.exports中的configureWebpack，在里面添加如下：
     plugins: [
       new CompressionPlugin({
