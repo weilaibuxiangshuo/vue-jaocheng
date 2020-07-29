@@ -1,4 +1,5 @@
 *注意vue-cli打包是不会把devServer代理打包进去的，因为devServer只用于开发环境，所以，nginx不用考虑vue代理设置的问题
+*但vue中打包的时候，baseURL设置非常重要，会影响到nginx设置，如果baseURL有设置加/api,vue所有访问请求都会加上/api，所以要分清楚
 
 第一：vue在打包之前先安装插件
 npm install --save-dev compression-webpack-plugin
